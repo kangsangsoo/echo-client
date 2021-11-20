@@ -1,0 +1,11 @@
+TARGET=../bin/tc
+CPPFLAGS+=-Wall -O2
+LDLIBS+=-pthread
+
+all: $(TARGET)
+
+$(TARGET): tc.o
+	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+clean:
+	rm -f $(TARGET) *.o
