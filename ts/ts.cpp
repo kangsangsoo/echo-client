@@ -46,23 +46,19 @@ void recvThread(int sd) {
 	cout << "connected\n";
 	static const int BUFSIZE = 65536;
 	char buf[BUFSIZE];
-	while (true) {
+	bool exit_loop = false;
+	while (exit_loop) {
 		ssize_t res = recv(sd, buf, BUFSIZE - 1, 0);
 		if (res == 0 || res == -1) {
 			cerr << "recv return " << res;
 			perror(" ");
-
-			//
-			set_mutex.lock();
-			sd_list.erase(sd);
-			set_mutex.unlock();
-
-			//
 			break;
 		}
 		buf[res] = '\0';
 		cout << buf;
 		cout.flush();
+
+
 		if (param.broadcast) {
 			//
 			set_mutex.lock();
@@ -71,11 +67,12 @@ void recvThread(int sd) {
 				if (res_ == 0 || res_ == -1) {
 					cerr << "send return " << res;
 					perror(" ");
+					exit_loop = true;
+					set_mutex.unlock();
 					break;
 				}
 			}
 			set_mutex.unlock();
-
 			//
 		}
 
@@ -89,6 +86,11 @@ void recvThread(int sd) {
 		}
 		
 	}
+	//
+	set_mutex.lock();
+	sd_list.erase(sd);
+	set_mutex.unlock();
+	//
 	cout << "disconnected\n";
 	close(sd);
 }
