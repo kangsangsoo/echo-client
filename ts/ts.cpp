@@ -11,16 +11,17 @@
 
 using namespace std;
 
-
+//
 void usage() {
 	cout << "syntax: ts [-e] <port>\n";
 	cout << "  -e : echo\n";
 	cout << "sample: ts 1234\n";
 }
+//
 
 struct Param {
 	bool echo{false};
-	bool broadcast{false};
+	bool broadcast{false}; //
 	uint16_t port{0};
 
 	bool parse(int argc, char* argv[]) {
@@ -29,18 +30,22 @@ struct Param {
 				echo = true;
 				continue;
 			}
+			//
 			if (strcmp(argv[i], "-b") == 0) {
 				broadcast = true;
 				continue;
 			}
+			//
 			port = stoi(argv[i++]);
 		}
 		return port != 0;
 	}
 } param;
 
+//
 set <int> sd_list;
 mutex set_mutex;
+//
 
 void recvThread(int sd) {
 	cout << "connected\n";
