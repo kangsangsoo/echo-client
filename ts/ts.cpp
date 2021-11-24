@@ -13,9 +13,9 @@ using namespace std;
 
 //
 void usage() {
-	cout << "syntax: ts [-e] <port>\n";
-	cout << "  -e : echo\n";
-	cout << "sample: ts 1234\n";
+	cout << "echo-server:\n";
+	cout << "syntax : echo-server <port> [-e[-b]]\n";
+	cout << "sample : echo-server 1234 -e -b\n";
 }
 //
 
@@ -28,15 +28,18 @@ struct Param {
 		for (int i = 1; i < argc; i++) {
 			if (strcmp(argv[i], "-e") == 0) {
 				echo = true;
+				//cout << "-e" << endl;
 				continue;
 			}
 			//
 			if (strcmp(argv[i], "-b") == 0) {
 				broadcast = true;
+				//cout << "-b" << endl;
 				continue;
 			}
 			//
-			port = stoi(argv[i++]);
+			port = stoi(argv[i]);
+			//cout << port << endl;
 		}
 		return port != 0;
 	}
@@ -51,8 +54,7 @@ void recvThread(int sd) {
 	cout << "connected\n";
 	static const int BUFSIZE = 65536;
 	char buf[BUFSIZE];
-	bool exit_loop = false;
-	while (exit_loop) {
+	while (1) {
 		ssize_t res = recv(sd, buf, BUFSIZE - 1, 0);
 		if (res == 0 || res == -1) {
 			cerr << "recv return " << res;
@@ -72,8 +74,7 @@ void recvThread(int sd) {
 				if (res_ == 0 || res_ == -1) {
 					cerr << "send return " << res;
 					perror(" ");
-					exit_loop = true;
-					set_mutex.unlock();
+					sd_list.erase(i);
 					break;
 				}
 			}
