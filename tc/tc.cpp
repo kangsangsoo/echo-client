@@ -10,15 +10,16 @@
 using namespace std;
 
 void usage() {
-	cout << "syntax: tc <ip> <port>\n";
-	cout << "sample: tc 127.0.0.1 1234\n";
+	cout << "echo-client:\n";
+	cout << "syntax : echo-client <ip> <port>\n";
+	cout << "sample : echo-client 127.0.0.1 1234\n";
 }
 
 struct Param {
 	struct in_addr ip;
 	uint16_t port{0};
 
-	bool parse(int argc, char* argv[]) {
+	bool parse(int argc, char* argv[]) {		
 		for (int i = 1; i < argc; i++) {
 			int res = inet_pton(AF_INET, argv[i++], &ip); // IPv4, 문자열, 정수 저장 주소
 			// https://code.woboq.org/userspace/glibc/resolv/inet_pton.c.html#inet_pton4
@@ -27,7 +28,7 @@ struct Param {
 				case 0: cerr << "not a valid network address\n"; return false;
 				case -1: perror("inet_pton"); return false;
 			}
-			port = stoi(argv[i++]);
+			port = stoi(argv[i]);
 		}
 		return (ip.s_addr != 0) && (port != 0);
 	}
@@ -93,6 +94,5 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	while(1) cout << "exit\n";
 	close(sd);
 }
