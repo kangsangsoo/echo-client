@@ -75,7 +75,6 @@ void recvThread(int sd) {
 					cerr << "send return " << res;
 					perror(" ");
 					sd_list.erase(i);
-					break;
 				}
 			}
 			set_mutex.unlock();
