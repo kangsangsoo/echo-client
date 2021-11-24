@@ -1,4 +1,4 @@
-TARGET=../bin/ts
+TARGET=../bin/echo-server
 CPPFLAGS+=-Wall -O2
 LDLIBS+=-pthread
 
