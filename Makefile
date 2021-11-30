@@ -3,7 +3,7 @@
 all: tc ts
 
 tc:
-	cd tc; make; cd ..
+	mkdir bin; cd tc; make; cd ..
 
 ts:
 	cd ts; make; cd ..
